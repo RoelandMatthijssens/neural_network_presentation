@@ -1,0 +1,339 @@
+<!doctype html>
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %title Kubernetes
+    %meta{:content => "Dependency management on the blockchain", :name => "description"}/
+    %meta{:content => "Roeland Matthijssens", :name => "author"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}/
+    %link{:href => "reveal.js/css/reveal.min.css", :rel => "stylesheet"}/
+    -# %link{:href => "reveal.js/css/print/pdf.css", :rel => "stylesheet"}/
+    %link#theme{:href => "reveal.js/css/theme/beige.css", :rel => "stylesheet"}/
+    / For syntax highlighting
+    %link{:href => "reveal.js/lib/css/zenburn.css", :rel => "stylesheet"}/
+
+    / For nice fonts, load more here
+    / Go to http://www.google.com/webfonts
+    / * Add to collection
+    / * Use
+    / * pick which styles
+    / * find the link to add here
+    %link{ :href=> 'http://fonts.googleapis.com/css?family=Merriweather:400,700', :rel => 'stylesheet', :type => 'text/css'}
+    %link{ :href=> 'http://fonts.googleapis.com/css?family=Open+Sans:600', :rel => 'stylesheet', :type => 'text/css'}
+    / Nice fonts combos:
+    / http://designshack.net/articles/css/10-great-google-font-combinations-you-can-copy/
+
+    / Override the reveal.js fonts here, after loading them above
+    :css
+      .reveal h1 {
+        font-family: 'Merriweather', serif;
+        text-transform: none;
+        line-height: 1.0em;
+      }
+      .reveal h2 {
+        font-family: 'Merriweather', serif;
+        text-transform: none;
+      }
+      .reveal h3 {
+        font-family: 'Open Sans', sans-serif;
+        text-transform: none;
+      }
+      .reveal p {
+        font-family: 'Open Sans', sans-serif;
+        text-transform: none;
+      }
+      .reveal a {
+        text-decoration: underline !important;
+      }
+
+      /* Misc layout */
+      table.centric {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      table.centric td {
+        vertical-align: middle;
+        text-align: center;
+      }
+      th{
+        font-weight: bold !important;
+        padding-bottom: 1em !important;
+      }
+      td, th {
+        border-left: 1px solid grey !important;
+        padding-left: 1em !important;
+        padding-bottom: 0.3em !important;
+      }
+      li {
+        text-align:left;
+        padding: 9px !important;
+      }
+      ul.no-bullets {
+        list-style-type:none;
+      }
+
+      h3{
+        margin: 60px;
+      }
+
+      /* Styles for the specific data-state for the last slide */
+      html.the-end .state-background {
+        background-color: rgba(0,0,0, 0.8);
+      }
+
+
+      .strike {
+        text-decoration: line-through;
+      }
+
+      ul.compare {
+        list-style: none;
+      }
+      ul li.contra::before {
+        content: "\002D";
+        color: red;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+      ul li.pro::before {
+        content: "\002B";
+        color: green;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+      }
+
+    / If the query includes 'print-pdf', use the PDF print sheet
+    :javascript
+      document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+            /[if lt IE 9]
+      <script src="reveal.js/lib/js/html5shiv.js"></script>
+  %body
+    .reveal
+      / Any section element inside of this container is displayed as a slide
+      .slides
+
+        %section
+          %h1 Neural Networks
+          %br
+          %p Roeland Matthijssens
+
+        %section
+          %h1 Content
+          %ul
+            %li structure of a NN
+            %li Usage
+            %li Inner workings
+            %li Training
+
+        %section
+          %h1 Structure
+          %img(src='images/nn_structure.svg'){style: 'width:70%'}
+
+        %section
+          %section
+            %h1 Usage
+            %p Problem: Dog breed classification
+            %img(src='images/dog_breeds.png'){style: 'width:100%'}
+          %section
+            %h3 Data
+            %pre
+              %code
+                :preserve
+                  DogsToClassify = [
+                    {
+                      MuzzleLength: "10cm",
+                      TailLength: "20cm",
+                      BodySize: "70cm",
+                      CoatColor: "Black",
+                      CoatTexture: "Straight",
+                      ...
+                    }, {
+                      MuzzleLength: "7cm",
+                      TailLength: "10cm",
+                      BodySize: "30cm",
+                      CoatColor: "White",
+                      CoatTexture: "Curly",
+                      ...
+                    },
+                    ...
+                  ]
+          %section
+            %h3 Normalize Data
+            %pre
+              %code
+                :preserve
+                  DogsToClassify = [
+                    {
+                      MuzzleLength: 100,
+                      TailLength: 200,
+                      BodySize: 700,
+                      CoatColor: 0,
+                      CoatTexture: 0,
+                      ...
+                    }, {
+                      MuzzleLength: 70,
+                      TailLength: 100,
+                      BodySize: 300,
+                      CoatColor: 2,
+                      CoatTexture: 1,
+                      ...
+                    },
+                    ...
+                  ]
+                  CoatTextures = ["Straight", "Curly", ...]
+                  CoatColors = ["Black", "Brown", "White", ...]
+          %section
+            %h3 Prepare Data
+            %pre
+              %code
+                :preserve
+                  Inputs = [
+                    [100, 200, 700, 0, 0],
+                    [70, 100, 300, 2, 1],
+                    ...
+                  ]
+          %section
+            %h3 Making a guess
+            %img(src='images/make_a_guess.png'){style: 'width:80%'}
+          %section
+            %h3 Reading the output
+            %pre
+              %code
+                :preserve
+                  Outputs = [
+                    [0.03, 0.61, 0.16, 0.05, 0.05],
+                    [0.07, 0.05, 0.07, 0.01, 0.67],
+                    ...
+                  ]
+            %ul
+              %li The first dog is a dalmatian with a 61% confidence
+              %li The Second dog is a Shepherd with a 67% confidence
+
+        %section
+          %section
+            %h1 Inner workings
+          %section
+            %h3 Weights
+            %img(src='images/weights.png'){style: 'width:80%'}
+          %section
+            %h3 Biasses
+            %img(src='images/biasses.png'){style: 'width:80%'}
+          %section
+            %h3 Activation function
+            %ul
+              %li Map weighted sum to a more manageble value
+              %li Many different function
+              %li Each has their own purpose, benefits and drawbacks
+            %img(src='images/activation_functions.gif'){style: 'width:80%'}
+          // %section
+          //   %h3 Sigmoid
+          //   %img(src='images/sigmoid.svg'){style: 'width:80%'}
+          //   %ul.compare
+          //     %li.pro Reduce values between 0 and 1.
+          //     %li.pro Good for output nodes
+          //     %li.contra Vanishing gradient
+          //     %li.contra Dense layer representation
+          // %section
+          //   %h3 ReLu
+          //   %img(src='images/relu.svg'){style: 'width:80%'}
+          //   %ul.compare
+          //     %li.pro Sparce layer reprensentation
+          //     %li.pro Faster learning rate
+          //     %li.contra No values for negative numbers
+          // %section
+          //   %h3 Swish
+          //   %img(src='images/swish.svg'){style: 'width:80%'}
+          //   %ul.compare
+          //     %li.pro Good to estimate many non-linear problems
+          //     %li.pro Faster learning rate
+
+        %section
+          %section
+            %h3 Feed forwards
+            %ol
+              %li Provide input
+              %li Multiply weights
+              %li Add biasses
+              %li Run through activation function
+              %li Repeat for each layer
+              %li Read output
+          %section
+            %h3 Provide Input
+            %img(src='images/step0_nn.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step1_input.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step1.1_input.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %h3 Multiply weights
+            %img(src='images/step2_weights.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step2.1_weights.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step2.2_hidden_all.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %h3 Add biasses
+            %img(src='images/step3.0.add_biasses.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step3.1.add_biasses.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %img(src='images/step3.add_biasses.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %h3 Apply activation function
+            %img(src='images/step4.apply_activation_all.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %h3 Repeat for each subsequent layer
+            %img(src='images/step5.result.png'){style: 'width:80%'}
+          %section{"data-transition": "none"}
+            %h3 Read output
+            %img(src='images/step5.1.result_mapped.png'){style: 'width:80%'}
+
+        %section
+          %section
+            %h1 Training
+          %section
+            %h3 Backpropagation
+          %section
+            %h3 Gradient descent
+            %img(src='images/gradient-descent-optimized.gif'){style: 'width:80%'}
+          %section
+            %h3 Learning rate
+
+    %script{:src => "reveal.js/lib/js/head.min.js"}
+    %script{:src => "reveal.js/js/reveal.min.js"}
+    :javascript
+      // Full list of configuration options available here: JPL
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: false,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+            { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.body.classList; } },
+            // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+    %script
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
