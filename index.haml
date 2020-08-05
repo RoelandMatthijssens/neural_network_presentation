@@ -132,6 +132,13 @@
             %li Training
 
         %section
+          %h1 Disclaimer
+          %p There's a bunch of numerical magic that i'm glossing over.
+          %p For more details check out 
+          %img(src='images/book_cover.jpg'){style: 'width:40%'}
+
+
+        %section
           %h1 Structure
           %img(src='images/nn_structure.svg'){style: 'width:70%'}
 
@@ -298,12 +305,69 @@
           %section
             %h1 Training
           %section
+            %h1 Goal
+            %p Turn dials and nobs in the neural network to better predict the training data
+            %ul
+              %li weights
+              %li biasses
+
+          %section
             %h3 Backpropagation
+            %ol
+              %li Calculate average output errors
+              %li Adjust weights for nodes
+              %li Propagate errors to previous layer
+              %li Repeat for all layers
+          %section
+            %h3 Calculate average error
+            %pre
+              %code
+                :preserve
+                  for each data in training_data do
+                    feed forward with input
+                    calculate difference between expected and actual
+                    add error to running total
+                  end
+                  average running total error
+            %img(src='images/nn_structure.svg'){style: 'width:70%'}
+          %section
+            %h3 Adjust weights
+            %pre
+              %code
+                :preserve
+                  for node in the output layer
+                    adjust weight for each node in the previous layer based on error
+                  end
+          %section
+            %h3 Propagate errors to previous layer
+            %pre
+              %code
+                :preserve
+                  for node in the output layer
+                    for previous_node in previous layer nodes
+                      get error share for previous node based on weights
+                      add error to previous node 
+                    end
+                  end
+          %section
+            %h3 Repeat for all layers
+        
           %section
             %h3 Gradient descent
+            %p backpropagation is a very high demensional gradient descent
             %img(src='images/gradient-descent-optimized.gif'){style: 'width:80%'}
+        
+        %section
           %section
-            %h3 Learning rate
+            %h1 Future topics
+            %ul
+              %li Overfitting
+              %li Momentum
+              %li Optimizers
+              %li Learning rate
+              %li Stochastic Gradient Descent
+              %li Recurrent NN
+              %li ...
 
     %script{:src => "reveal.js/lib/js/head.min.js"}
     %script{:src => "reveal.js/js/reveal.min.js"}
