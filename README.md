@@ -1,7 +1,7 @@
 [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/RoelandMatthijssens/neural_network_presentation)
 
 ## Hosted at
-https://roelandmatthijssens.github.io/pokerPresentation/
+https://roelandmatthijssens.github.io/neural_network_presentation/
 
 ## Installation
 
@@ -26,6 +26,3 @@ https://roelandmatthijssens.github.io/pokerPresentation/
   them on change
 
 * Write a kick-ass presentation!
-
-
-
